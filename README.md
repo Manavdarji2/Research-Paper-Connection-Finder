@@ -59,9 +59,35 @@ The backend utilizes `uv` for lightning-fast dependency management and requires 
    ```
    *(The web interface will be accessible at `http://localhost:5173`)*
 
+## Deployment
+
+This project is configured for automated deployment using **GitHub Actions** and **Netlify**.
+
+### 1. Frontend (Netlify)
+
+To set up automated deployment for the frontend:
+
+1.  **Create a Netlify Site**: Log in to Netlify and create a new site from your GitHub repository (or a blank site).
+2.  **Get Netlify Secrets**:
+    - **`NETLIFY_AUTH_TOKEN`**: Generate a Personal Access Token in your Netlify [User Settings](https://app.netlify.com/user/settings/applications).
+    - **`NETLIFY_SITE_ID`**: Found in your Site Settings -> Site information -> Site ID.
+3.  **Add Secrets to GitHub**:
+    - In your GitHub repository, go to `Settings` -> `Secrets and variables` -> `Actions`.
+    - Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`.
+    - (Optional) Add `VITE_API_BASE_URL` pointing to your hosted FastAPI backend.
+
+Once configured, Every push to the `main` branch will automatically build and deploy your frontend to Netlify.
+
+### 2. Backend (FastAPI)
+
+The backend is configured with a CI pipeline (`.github/workflows/ci.yml`) that verifies dependencies and builds on every push. For hosting the backend, we recommend:
+- **Railway**, **Render**, or **Fly.io** (Container-based hosting).
+- Ensure you set your `OPENROUTER_API_KEY` in the hosting provider's environment variables.
+
 ## Project Structure
 
 - `/backend/app/`: FastAPI application containing the agent logic, graphs, and tool definitions.
 - `/frontend/`: React components, Vite configuration, and styles.
 - `pyproject.toml` / `uv.lock`: Backend dependency configurations.
 - `package.json`: Frontend dependency configurations.
+- `.github/workflows/`: Automated CI/CD pipelines.
