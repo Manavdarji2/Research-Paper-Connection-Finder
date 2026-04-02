@@ -61,28 +61,31 @@ The backend utilizes `uv` for lightning-fast dependency management and requires 
 
 ## Deployment
 
-This project is configured for automated deployment using **GitHub Actions** and **Netlify**.
+This project is configured for automated deployment using **GitHub Actions**, **Vercel**, and **Render**.
 
-### 1. Frontend (Netlify)
+### 1. Frontend (Vercel)
 
-To set up automated deployment for the frontend:
+The frontend is deployed to Vercel via a GitHub Action (`.github/workflows/deploy_vercel.yml`).
 
-1.  **Create a Netlify Site**: Log in to Netlify and create a new site from your GitHub repository (or a blank site).
-2.  **Get Netlify Secrets**:
-    - **`NETLIFY_AUTH_TOKEN`**: Generate a Personal Access Token in your Netlify [User Settings](https://app.netlify.com/user/settings/applications).
-    - **`NETLIFY_SITE_ID`**: Found in your Site Settings -> Site information -> Site ID.
-3.  **Add Secrets to GitHub**:
-    - In your GitHub repository, go to `Settings` -> `Secrets and variables` -> `Actions`.
-    - Add `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`.
+1.  **Vercel Setup**:
+    - Create a new project in your Vercel Dashboard.
+    - Obtain your **`VERCEL_ORG_ID`** and **`VERCEL_PROJECT_ID`** from the project settings.
+    - Generate a **`VERCEL_TOKEN`** in your [Vercel Account Settings](https://vercel.com/account/tokens).
+2.  **Add Secrets to GitHub**:
+    - Add `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` to your GitHub repository secrets.
     - (Optional) Add `VITE_API_BASE_URL` pointing to your hosted FastAPI backend.
 
-Once configured, Every push to the `main` branch will automatically build and deploy your frontend to Netlify.
+### 2. Backend (Render)
 
-### 2. Backend (FastAPI)
+The backend is configured for **Render** using a `render.yaml` Blueprint.
 
-The backend is configured with a CI pipeline (`.github/workflows/ci.yml`) that verifies dependencies and builds on every push. For hosting the backend, we recommend:
-- **Railway**, **Render**, or **Fly.io** (Container-based hosting).
-- Ensure you set your `OPENROUTER_API_KEY` in the hosting provider's environment variables.
+1.  **Deploy on Render**:
+    - Connect your GitHub repository to Render.
+    - Select **Blueprints** and choose this repository.
+    - Render will automatically detect the `render.yaml` and configure the service.
+2.  **Environment Variables**:
+    - Set `OPENROUTER_API_KEY` in the Render dashboard for the `mcp-backend` service.
+    - The server will start automatically using `uvicorn`.
 
 ## Project Structure
 
